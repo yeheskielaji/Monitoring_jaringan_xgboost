@@ -1,0 +1,39 @@
+# Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Flask instance
+instance/
+
+# Flask configuration files
+*.env
+*.flaskenv
+
+# Virtual environment
+venv/
+*.env
+*.venv
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Model and dataset files
+/models/
+*.pkl
+/data/*.csv
+
+# IDE specific files
+.vscode/
+.idea/
+
+# Python distributions
+*.egg-info/
+dist/
+build/
+
+# Log files
+*.log
+
+# Temporary files
+*.bak
+*.swp
