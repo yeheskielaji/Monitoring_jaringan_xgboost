@@ -1,6 +1,79 @@
-from app import create_app
+from flask import Flask, jsonify, request  # Impor request
+from flask_socketio import SocketIO, emit
+from flask_cors import CORS
+from app.predict import get_prediction, X  # Mengimpor fungsi prediksi dari predict.py
+import threading
+import time
 
-app = create_app()
+# Inisialisasi aplikasi Flask dan Flask-SocketIO
+app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
+# Variabel global untuk kontrol simulasi
+simulation_running = False
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        # Ambil data JSON yang dikirim oleh client (misalnya hanya row_index untuk memilih baris dari dataset)
+        input_data = request.get_json(force=True)  # Memperbaiki dengan impor request
+        row_index = input_data.get('row_index', 0)  # Default mengambil baris pertama jika tidak ada index yang diberikan
+
+        # Panggil fungsi prediksi dari app.predict
+        response = get_prediction(row_index)
+
+        # Kirim data prediksi melalui WebSocket
+        socketio.emit('prediction', response)
+
+        return jsonify(response)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+def simulate_real_time():
+    """Simulasikan pengiriman data per baris secara real-time menggunakan WebSocket"""
+    global simulation_running
+    try:
+        for i in range(len(X)):
+            if not simulation_running:
+                break
+
+            response = get_prediction(i)
+
+            # Kirim data via WebSocket setiap baris
+            socketio.emit('prediction', response)
+            time.sleep(1)  # Delay untuk mensimulasikan real-time
+
+    except Exception as e:
+        print(f"Error during simulation: {str(e)}")
+
+
+@socketio.on('start_simulation')
+def start_simulation():
+    global simulation_running
+    simulation_running = True
+    print("Simulation started!")
+    emit('simulation_started', {'message': 'Simulation Started!'})
+    # Jalankan simulasi prediksi di thread terpisah
+    thread = threading.Thread(target=simulate_real_time)
+    thread.start()
+
+
+@socketio.on('stop_simulation')
+def stop_simulation():
+    global simulation_running
+    simulation_running = False
+    print("Simulation stopped!")
+    emit('simulation_stopped', {'message': 'Simulation Stopped!'})
+
+
+# Event handler untuk menerima koneksi WebSocket
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+    emit('message', {'data': 'Connected to Flask-SocketIO'})
+
+# Jalankan aplikasi menggunakan SocketIO
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
