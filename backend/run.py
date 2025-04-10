@@ -1,7 +1,6 @@
-from flask import Flask, jsonify, request  # Impor request
+from flask import Flask, jsonify, request  
 from flask_socketio import SocketIO, emit
-from flask_cors import CORS
-from app.predict import get_prediction, X  # Mengimpor fungsi prediksi dari predict.py
+from app.predict import get_prediction, X 
 import threading
 import time
 
@@ -16,8 +15,8 @@ simulation_running = False
 def predict():
     try:
         # Ambil data JSON yang dikirim oleh client (misalnya hanya row_index untuk memilih baris dari dataset)
-        input_data = request.get_json(force=True)  # Memperbaiki dengan impor request
-        row_index = input_data.get('row_index', 0)  # Default mengambil baris pertama jika tidak ada index yang diberikan
+        input_data = request.get_json(force=True)  
+        row_index = input_data.get('row_index', 0)  
 
         # Panggil fungsi prediksi dari app.predict
         response = get_prediction(row_index)

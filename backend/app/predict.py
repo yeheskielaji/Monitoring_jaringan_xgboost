@@ -3,8 +3,6 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.decomposition import IncrementalPCA
-from xgboost import XGBClassifier
-import time
 
 # Memuat model PCA dan XGBoost yang telah dilatih
 ipca = joblib.load('models/pca_model.pkl')  # Memuat model PCA

@@ -17,10 +17,6 @@ venv/
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
-# Model and dataset files
-/models/
-*.pkl
-/data/*.csv
 
 # IDE specific files
 .vscode/
