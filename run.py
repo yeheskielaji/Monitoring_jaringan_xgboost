@@ -1,12 +1,16 @@
+import os
 from flask import Flask, jsonify, request, send_from_directory
 from flask_socketio import SocketIO, emit
 from app.predict import get_prediction, X
 import threading
 import time
-import os
+
+# Path absolut ke folder frontend
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
 # Inisialisasi aplikasi Flask dan Flask-SocketIO
-app = Flask(__name__, static_folder="../frontend", static_url_path="")
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Variabel global untuk kontrol simulasi
