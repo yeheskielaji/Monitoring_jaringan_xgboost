@@ -1,4 +1,7 @@
 Flask
+Flask-socketio
+eventlet
+gunicorn
 joblib
 xgboost
 pandas
