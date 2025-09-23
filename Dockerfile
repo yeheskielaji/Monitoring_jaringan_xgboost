@@ -3,5 +3,5 @@ WORKDIR /Monitoring_jaringan_xgboost
 COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 5000
+EXPOSE 88
 CMD ["python", "run.py"]
